@@ -1,0 +1,5 @@
+*.project
+*.txt
+*.mk
+*.x
+Debug/
