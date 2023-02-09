@@ -182,7 +182,34 @@ uchar ascii_read_data(void)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+/**
+ * @brief TODO;
+ */
+void ascii_init(void)
+{
+    //
+}
 
+
+/**
+ * @brief TODO;
+ * @param x
+ * @param y
+ */
+void ascii_goto(int x, int y)
+{
+
+}
+
+
+/**
+ * @brief TODO;
+ * @param c
+ */
+void ascii_write_char(uchar c)
+{
+
+}
 
 
 // =============================================================================
@@ -190,11 +217,31 @@ uchar ascii_read_data(void)
 
 void main(void)
 {
-    app_init();
+    // Data used in the application.
+    char *s;
+    const char test1[] = "Alfanumerisk ";
+    const char test2[] = "Display - test";
 
-    while (true)
-    {
-        delay_milli( 1000 );
-    }
+    // Program set-up.
+    app_init();
+    ascii_init();
+
+    // Move to the 1st row and set the output-pointer to the 1st string.
+    ascii_goto(1, 1);
+    s = test1;
+
+    // Print out each character.
+    while (*s)
+        ascii_write_char(*s++);
+
+    // Move to the 2nd row and set the output-pointer to the 2nd string.
+    ascii_goto(1, 2);
+    s = test2;
+
+    // Again, print out each character.
+    while (*s)
+        ascii_write_char(*s++);
+
+    return 0;
 }
 
