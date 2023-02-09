@@ -5,7 +5,7 @@
 
 
 /**
- * @brief Locks execution for ~250 nanoseconds.
+ * @brief Blocks execution for ~250 nanoseconds.
  */
 void delay_250ns(void)
 {
@@ -25,11 +25,15 @@ void delay_250ns(void)
 
 
 /**
- * @brief Delay the
- * @param us
+ * @brief Delay the execution of code for a specified amount of mikroseconds.
+ * @param us The duration to sleep in mikroseconds.
  */
 void delay_mikro(uint us)
 {
+#if SIMULATOR
+    us /= 1000;
+    us++;
+#endif
     while (us > 0)
     {
         delay_250ns();
@@ -42,11 +46,21 @@ void delay_mikro(uint us)
 }
 
 
+/**
+ * @brief Delay the execution of code for a specified amount of milliseconds.
+ * @param ms The duration to sleep in milliseconds.
+ */
 void delay_milli(uint ms)
 {
 #if SIMULATOR
     ms /= 1000;
     ms++;
 #endif
-    delay_mikro( 1000 * ms );
+    for (uint i = 0; i < 1000 * ms; i++)
+    {
+        delay_250ns();
+        delay_250ns();
+        delay_250ns();
+        delay_250ns();
+    }
 }
