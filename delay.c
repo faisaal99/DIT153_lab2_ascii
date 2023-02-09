@@ -1,6 +1,7 @@
 #include "typedef.h"
 #include "memreg.h"
 
+#define SIMULATOR 1
 
 
 /**
@@ -29,11 +30,6 @@ void delay_250ns(void)
  */
 void delay_mikro(uint us)
 {
-#if SIMULATOR
-    //us /= 1000;
-    //us++;
-#endif
-
     while (us > 0)
     {
         delay_250ns();
