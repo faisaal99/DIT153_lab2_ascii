@@ -1,10 +1,10 @@
 __attribute__((naked)) __attribute__((section (".start_section")) )
 void startup ( void )
 {
-__asm__ volatile(" LDR R0,=0x2001C000\n");      /* set stack */
+__asm__ volatile(" LDR R0,=0x2001C000\n");      /* Set stack    */
 __asm__ volatile(" MOV SP,R0\n");
-__asm__ volatile(" BL main\n");                 /* call main */
-__asm__ volatile(".L1: B .L1\n");               /* never return */
+__asm__ volatile(" BL main\n");                 /* Call main    */
+__asm__ volatile(".L1: B .L1\n");               /* Never return */
 }
 
 // =============================================================================
@@ -107,7 +107,7 @@ uchar ascii_read_controller()
 
     // Delay 360ns
 
-    uchar rv = gpio_e->ODR_HIGH;
+    uchar rv = gpio_e->IDR_HIGH;
     ascii_ctrl_bit_clear(B_E);
 
     return rv;
@@ -184,10 +184,59 @@ uchar ascii_read_data(void)
 
 /**
  * @brief TODO;
+ * @param cmd
+ * @param delay_func
+ * @param delay_dur
+ */
+void ascii_command(
+    uchar cmd,
+    void(*delay_func)(uint),
+    uint  delay_dur
+)
+{
+    while ( (ascii_read_status() & 0x80) == 0x80 );
+
+    delay_mikro     (     8     );
+    ascii_write_cmd (    cmd    );
+    delay_func      ( delay_dur );
+}
+
+
+/**
+ * @brief TODO;
+ * @param cmd
+ * @param delay_func
+ * @param delay_dur
+ */
+void ascii_data(
+    uchar cmd,
+    void(*delay_func)(uint),
+    uint  delay_dur
+)
+{
+    while ( (ascii_read_status() & 0x80) == 0x80 );
+
+    delay_mikro      (     8     );
+    ascii_write_data (    cmd    );
+    delay_func       ( delay_dur );
+}
+
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+/**
+ * @brief TODO;
  */
 void ascii_init(void)
 {
-    //
+    // Function Set: 2 rows, 5x8-point characters.
+    ascii_command(0b00111000, delay_mikro, 40);
+    // Display Control
+    ascii_command(0b00001110, delay_mikro, 40);
+    // Clear Display
+    ascii_command(0b00000001, delay_milli,  2);
+    // Entry Mode Set
+    ascii_command(0b00000100, delay_mikro, 40);
 }
 
 
@@ -196,9 +245,14 @@ void ascii_init(void)
  * @param x
  * @param y
  */
-void ascii_goto(int x, int y)
+void ascii_goto(uint row, uint column)
 {
+    uint address = row - 1;
 
+    if (column == 2)
+        address += 0x40;
+
+    ascii_write_cmd( 0x80 | address );
 }
 
 
@@ -208,7 +262,7 @@ void ascii_goto(int x, int y)
  */
 void ascii_write_char(uchar c)
 {
-
+    ascii_data(c, delay_mikro, 43);
 }
 
 
@@ -219,8 +273,8 @@ void main(void)
 {
     // Data used in the application.
     char *s;
-    const char test1[] = "Alfanumerisk ";
-    const char test2[] = "Display - test";
+    const char test1[] = "Faisal ";
+    const char test2[] = "is an idiot";
 
     // Program set-up.
     app_init();
