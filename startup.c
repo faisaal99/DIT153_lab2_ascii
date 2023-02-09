@@ -45,8 +45,9 @@ extern void delay_milli(uint);
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 /**
- * @brief TODO;
- * @param x
+ * @brief Set some specific bits to 1 in the control register.
+ * @param x A char containing enabled bits that'll be set to 1 in the control
+ *          register.
  */
 void ascii_ctrl_bit_set(uchar x)
 {
@@ -56,8 +57,9 @@ void ascii_ctrl_bit_set(uchar x)
 
 
 /**
- * @brief TODO;
- * @param x
+ * @brief Set some specific bits to 0 in the control register.
+ * @param x A char containing enabled bits that'll be set to 0 in the control
+ *          register.
  */
 void ascii_ctrl_bit_clear(uchar x)
 {
@@ -78,8 +80,9 @@ uchar ascii_read_data(void);
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 /**
- * @brief TODO;
- * @param byte
+ * @brief Write a byte to the output. This function abstracts away
+ *        synchronization with the hardware.
+ * @param byte The byte to output.
  */
 void ascii_write_controller(uchar byte)
 {
@@ -97,8 +100,8 @@ void ascii_write_controller(uchar byte)
 }
 
 /**
- * @brief TODO;
- * @param byte
+ * @brief Read a byte from the input. This function abstracts away
+ *        synchronization from the hardware.
  */
 uchar ascii_read_controller()
 {
@@ -117,8 +120,9 @@ uchar ascii_read_controller()
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 /**
- * @brief TODO;
- * @param cmd
+ * @brief Write a command to the ASCII display. This is low-level. Use
+ *        ascii_command() instead.
+ * @param cmd The byte-sized command to send to the ASCII display.
  */
 void ascii_write_cmd(uchar cmd)
 {
@@ -130,8 +134,9 @@ void ascii_write_cmd(uchar cmd)
 
 
 /**
- * @brief TODO;
- * @param data
+ * @brief Write data to the ASCII display. This is low-level. Use ascii_data()
+ *        instead.
+ * @param data The byte-sized data to send to the ASCII display.
  */
 void ascii_write_data(uchar data)
 {
@@ -145,7 +150,7 @@ void ascii_write_data(uchar data)
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 /**
- * @brief TODO;
+ * @brief Read the status of the ASCII display.
  */
 uchar ascii_read_status(void)
 {
@@ -163,7 +168,7 @@ uchar ascii_read_status(void)
 
 
 /**
- * @brief TODO;
+ * @brief Read data from the ASCII display.
  */
 uchar ascii_read_data(void)
 {
@@ -183,10 +188,13 @@ uchar ascii_read_data(void)
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 /**
- * @brief TODO;
- * @param cmd
- * @param delay_func
- * @param delay_dur
+ * @brief Send an instruction to the ASCII display, while specifying a required
+ *        duration to wait, for synchronization. This function is high-level and
+ *        should be the ONLY way of communicating with the hardware.
+ * @param cmd The byte-sized command to send to the ASCII display.
+ * @param delay_func The specific delay function to call.
+ * @param delay_dur The duration to wait. This number is relative to the
+ *        delay_func.
  */
 void ascii_command(
     uchar cmd,
@@ -203,10 +211,13 @@ void ascii_command(
 
 
 /**
- * @brief TODO;
- * @param cmd
- * @param delay_func
- * @param delay_dur
+ * @brief Send data to the ASCII display, while specifying a required duration
+ *        to wait, for synchronization. This function is high-level and should
+ *        be the ONLY way of communicating with the hardware.
+ * @param cmd The byte-sized data to send to the ASCII display.
+ * @param delay_func The specific delay function to call.
+ * @param delay_dur The duration to wait. This number is relative to the
+ *        delay_func.
  */
 void ascii_data(
     uchar cmd,
@@ -225,7 +236,7 @@ void ascii_data(
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 /**
- * @brief TODO;
+ * @brief Initialize the ASCII display.
  */
 void ascii_init(void)
 {
@@ -241,9 +252,9 @@ void ascii_init(void)
 
 
 /**
- * @brief TODO;
- * @param x
- * @param y
+ * @brief Defines a way of accessing the rows and columns of the ASCII display.
+ * @param row An integer in range [1, 20]
+ * @param column An integer in range [1, 2]
  */
 void ascii_goto(uint row, uint column)
 {
@@ -257,8 +268,8 @@ void ascii_goto(uint row, uint column)
 
 
 /**
- * @brief TODO;
- * @param c
+ * @brief Write a character to the ASCII display.
+ * @param c The character to output. Viewed as ASCII.
  */
 void ascii_write_char(uchar c)
 {
